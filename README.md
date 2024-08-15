@@ -20,8 +20,8 @@ This is a private chat application built using Flask, Socket.IO, and WebSockets.
 1. **Clone the repository**:
 
     ```bash
-    git clone https://github.com/yourusername/private-chat-app.git
-    cd private-chat-app
+    git clone https://github.com/N00BSC00B/Private-Chat.git
+    cd Private-Chat
     ```
 
 2. **Create a virtual environment**:
@@ -47,13 +47,23 @@ This is a private chat application built using Flask, Socket.IO, and WebSockets.
     pip install -r requirements.txt
     ```
 
-5. **Run the application**:
+5. **Run the server (or use the already configured centralized server)**:
 
     ```bash
     python server.py
     ```
 
-6. **Open your browser and navigate to**:
+6. **Run Web Based Flask App or Python Client**
+
+    ```bash
+    python WEB/flask-app.py
+    ```
+
+    ```bash
+    python client.py
+    ```
+
+7. **Open your browser and navigate to**:
     ```
     http://localhost:6652
     ```
@@ -61,6 +71,7 @@ This is a private chat application built using Flask, Socket.IO, and WebSockets.
 ## File Descriptions
 
 -   **server.py**: The main server-side script that handles WebSocket connections, encryption, and message routing.
+-   **client.py**: The command promt based python client to connect to the server.
 -   **static/**: Contains static files such as CSS, JavaScript, and images.
     -   **styles.css**: Contains the styles for the application.
     -   **script.js**: Contains the client-side JavaScript for handling WebSocket connections and UI interactions.
