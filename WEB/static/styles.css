@@ -1,4 +1,7 @@
+/* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+/* General body styling */
 body {
     font-family: "Poppins", sans-serif;
     margin: 0;
@@ -6,6 +9,7 @@ body {
     background-color: #f2f2f2;
 }
 
+/* Notification container styling */
 #notification-container {
     position: fixed;
     top: 20px;
@@ -19,12 +23,14 @@ body {
     transition: transform 0.3s ease-in-out; /* Add a smooth transition effect */
 }
 
+/* Hidden state for notification container */
 #notification-container.hidden {
     transform: translateY(-100%);
     background-color: transparent;
     box-shadow: none;
 }
 
+/* Wrapper styling for centering content */
 #wrapper {
     display: flex;
     justify-content: center;
@@ -32,6 +38,7 @@ body {
     height: 100vh;
 }
 
+/* User form styling */
 #user-form {
     width: 100%; /* Adjusted to occupy full width of its container */
     max-width: 400px; /* Set a maximum width */
@@ -42,11 +49,13 @@ body {
     margin: 0 auto; /* Center the form horizontally */
 }
 
+/* Label styling within the user form */
 #user-form label {
     display: block;
     margin-bottom: 10px; /* Increased margin for better separation */
 }
 
+/* Input field styling within the user form */
 #user-form input[type="text"] {
     width: 100%;
     padding: 10px;
@@ -56,6 +65,7 @@ body {
     box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
+/* Button styling within the user form */
 #user-form button {
     display: block;
     width: 100%;
@@ -67,10 +77,12 @@ body {
     cursor: pointer;
 }
 
+/* Hover effect for the button */
 #user-form button:hover {
     background-color: #0056b3;
 }
 
+/* Chat container styling */
 .chat-container {
     width: 80%; /* Adjust the width as needed */
     max-width: 400px; /* Set a maximum width */
@@ -81,6 +93,7 @@ body {
     height: 90%;
 }
 
+/* Chat messages container styling */
 .chat-messages {
     flex-grow: 1; /* Allow the chat messages to grow and occupy remaining space */
     padding: 10px;
@@ -89,6 +102,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* Custom scrollbar styling for chat messages */
 .chat-messages::-webkit-scrollbar {
     width: 10px; /* Width of the scrollbar */
 }
@@ -106,6 +120,7 @@ body {
     background: #555; /* Color of the scrollbar thumb on hover */
 }
 
+/* General message styling */
 .message {
     background-color: transparent;
     border-radius: 8px;
@@ -113,6 +128,7 @@ body {
     margin-bottom: 10px;
 }
 
+/* System message styling */
 .message.system {
     background-color: #cce6ff; /* Light gray */
     text-align: center;
@@ -154,6 +170,7 @@ body {
     border-radius: 8px;
 }
 
+/* Chat input container styling */
 .chat-input-container {
     display: flex;
     position: absolute;
@@ -164,6 +181,7 @@ body {
     overflow-y: auto;
 }
 
+/* Custom scrollbar styling for chat input container */
 .chat-input-container::-webkit-scrollbar {
     width: 10px; /* Width of the scrollbar */
 }
@@ -182,15 +200,18 @@ body {
     background: #555; /* Color of the scrollbar thumb on hover */
 }
 
+/* Chat input field styling */
 .chat-input {
     flex: 1;
     margin-right: 10px;
 }
 
+/* Send button container styling */
 .send-button-container {
     margin-left: 10px;
 }
 
+/* Send button styling */
 #send-button {
     background: none;
     border: none;
@@ -198,11 +219,13 @@ body {
     padding: 5px; /* Adjust button padding */
 }
 
+/* Send button icon styling */
 #send-button img {
     width: 20px; /* Adjust icon size */
     height: 20px;
 }
 
+/* Custom textarea styling */
 .custom-textarea {
     resize: none; /* Disable textarea resizing */
     overflow: hidden; /* Hide overflow text */
@@ -217,6 +240,7 @@ body {
     box-sizing: border-box; /* Include padding and border in total height */
 }
 
+/* Focus state for custom textarea */
 .custom-textarea:focus {
     outline: none; /* Remove default focus outline */
     border-color: #007bff; /* Change border color on focus */

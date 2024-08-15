@@ -4,16 +4,25 @@ import threading
 from colorama import Fore, Style
 import json
 import os
-
 import rsa
 
+# Generate RSA keys for the client
 (public_key, private_key) = rsa.newkeys(1024)
 server_public_key = None
 server_private_key = None
 
 
 def encrypt(message, public_key):
+    """
+    Encrypts a message using the provided RSA public key.
 
+    Args:
+        message (str): The message to be encrypted.
+        public_key (rsa.PublicKey): The RSA public key for encryption.
+
+    Returns:
+        bytes: The encrypted message.
+    """
     max_block_size = rsa.common.byte_size(public_key.n) - 11
     chunks = [
         message[i:i+max_block_size]
@@ -28,7 +37,16 @@ def encrypt(message, public_key):
 
 
 def decrypt(encrypted_message, private_key):
+    """
+    Decrypts an encrypted message using the provided RSA private key.
 
+    Args:
+        encrypted_message (bytes): The encrypted message.
+        private_key (rsa.PrivateKey): The RSA private key for decryption.
+
+    Returns:
+        str: The decrypted message.
+    """
     max_block_size = rsa.common.byte_size(private_key.n)
     chunks = [
         encrypted_message[i:i+max_block_size]
@@ -42,6 +60,7 @@ def decrypt(encrypted_message, private_key):
     return decrypted_message.decode()
 
 
+# Define color codes for different message types
 colors = {
     "green": Fore.GREEN,
     "red": Fore.RED,
@@ -51,7 +70,20 @@ colors = {
 
 
 class ChatClient:
+    """
+    Represents a chat client that connects to a chat server.
+    """
+
     def __init__(self, host, port, username, room):
+        """
+        Initializes a new chat client.
+
+        Args:
+            host (str): The host address of the server.
+            port (int): The port number of the server.
+            username (str): The username of the client.
+            room (str): The chat room to join.
+        """
         self.host = host
         self.port = port
         self.username = username
@@ -59,6 +91,9 @@ class ChatClient:
         self.websocket = None
 
     async def connect_to_server(self):
+        """
+        Connects to the chat server and joins the specified chat room.
+        """
         uri = f"ws://{self.host}:{self.port}"
         self.websocket = await websockets.connect(uri)
         msg = {
@@ -70,13 +105,23 @@ class ChatClient:
         }
         await self.websocket.send(json.dumps(msg))
 
+        # Start receiving messages from the server
         receive_task = asyncio.create_task(self.receive_messages())
         await receive_task
 
     async def send_message(self, message):
+        """
+        Sends a message to the chat server.
+
+        Args:
+            message (dict): The message to be sent.
+        """
         await self.websocket.send(json.dumps(message))
 
     async def receive_messages(self):
+        """
+        Receives messages from the chat server and handles them.
+        """
         global server_public_key, server_private_key
 
         while True:
@@ -89,6 +134,7 @@ class ChatClient:
                         f"{colors[message['color']]}{message['message']}{colors['reset']}"  # noqa
                     )
                     if message["code"] == 409:
+                        # Handle username conflict
                         self.username = input("Enter a different username: ")
                         msg = {
                             "type": "JOIN_ROOM",
@@ -101,6 +147,7 @@ class ChatClient:
                         continue
 
                     elif not server_public_key and not server_private_key:
+                        # Decrypt and load server's public and private keys
                         pub_key = bytes.fromhex(message["public_key"])
                         server_public_key = rsa.PublicKey.load_pkcs1(
                             decrypt(pub_key, private_key)
@@ -112,6 +159,7 @@ class ChatClient:
                         )
 
                 if message["type"] == "USER_MESSAGE" and message["message"]:
+                    # Decrypt and display user message
                     toSend = bytes.fromhex(message["message"])
                     toSend = decrypt(toSend, server_private_key)
                     print(
@@ -119,6 +167,7 @@ class ChatClient:
                     )
 
                 if message["type"] == "MEDIA_MESSAGE":
+                    # Handle incoming media message
                     media_encoded = message["message"]
                     filename = message.get("filename", "unknown")
 
@@ -146,12 +195,19 @@ class ChatClient:
 
 
 def user_input_loop(client):
+    """
+    Continuously reads user input and sends messages to the chat server.
+
+    Args:
+        client (ChatClient): The chat client instance.
+    """
     while True:
         message = input()
         type = "CHAT_MESSAGE"
         filename = None
 
         if message.startswith("/media"):
+            # Handle media message
             try:
                 with open(message.split()[1], "rb") as file:
                     file_content = file.read()
@@ -166,8 +222,6 @@ def user_input_loop(client):
             encrypt(message, server_public_key)
             if type == "CHAT_MESSAGE" else file_content
         )
-        # print(encrypted_message)
-        # print(encrypted_message.hex())
         msg = {
             "type": type,
             "username": client.username,

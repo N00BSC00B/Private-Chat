@@ -1,4 +1,4 @@
-const socket = io.connect();
+const socket = io.connect(); // Establish WebSocket connection
 
 const notification = document.getElementById('notification-container');
 
@@ -8,7 +8,11 @@ let connected = false;
 let username;
 let room;
 
-// Function to send a message via WebSocket
+/**
+ * Sends a message via WebSocket.
+ * 
+ * @param {string} message - The message to be sent.
+ */
 function sendMessage(message) {
     let data = { room: room, username: username, message: message };
     console.log(data);
@@ -16,7 +20,12 @@ function sendMessage(message) {
     updateChat(message, 'YOU');
 }
 
-// Function to initialize WebSocket connection after user submits username and room
+/**
+ * Initializes WebSocket connection after user submits username and room.
+ * 
+ * @param {string} newUsername - The username of the user.
+ * @param {string} newRoom - The room to join.
+ */
 function initializeWebSocket(newUsername, newRoom) {
     if (newUsername !== "" && newRoom !== "") {
 
@@ -34,7 +43,9 @@ function initializeWebSocket(newUsername, newRoom) {
     }
 }
 
-// Function to read user input and send messages
+/**
+ * Reads user input and sends messages.
+ */
 function startReadingInput() {
     const inputField = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
@@ -42,7 +53,7 @@ function startReadingInput() {
     inputField.addEventListener('keydown', function (event) {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault(); // Prevent the default behavior of Enter key
-            // check if empty message
+            // Check if the message is empty
             if (inputField.value.trim() === '') {
                 return;
             }
@@ -57,7 +68,12 @@ function startReadingInput() {
     });
 }
 
-
+/**
+ * Updates the chat with a new message.
+ * 
+ * @param {string} message - The message to be displayed.
+ * @param {string} type - The type of message ('SYSTEM_MESSAGE', 'YOU', 'OTHERS').
+ */
 function updateChat(message, type) {
     const chatMessages = document.getElementById('chat-messages');
     const messageContainer = document.createElement('div');
@@ -87,8 +103,6 @@ function updateChat(message, type) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-
-
 // Event listener for submitting the username and room
 document.getElementById('login-form').addEventListener('submit', function (event) {
     event.preventDefault();
@@ -97,7 +111,7 @@ document.getElementById('login-form').addEventListener('submit', function (event
     initializeWebSocket(username, roomCode);
 });
 
-
+// Event listener for receiving messages from the server
 socket.on('message_received', function (data) {
     if (data.type === 'SYSTEM_MESSAGE') {
         if (data.code === 409) {
@@ -128,12 +142,15 @@ socket.on('message_received', function (data) {
     }
 });
 
+// Event listener for handling user disconnect
 window.addEventListener('beforeunload', function (event) {
     userDisconnect();
 });
 
+/**
+ * Handles user disconnection.
+ */
 function userDisconnect() {
-
     let inputData = { room: room, username: username };
 
     fetch('user_disconnect', {
